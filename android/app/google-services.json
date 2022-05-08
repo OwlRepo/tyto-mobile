@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "773027938100",
+    "firebase_url": "https://tyto-admin-web-default-rtdb.firebaseio.com",
+    "project_id": "tyto-admin-web",
+    "storage_bucket": "tyto-admin-web.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773027938100:android:6632cf71277ad1640eef61",
+        "android_client_info": {
+          "package_name": "com.example.tyto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773027938100-pc36t0b2h20efbj9auft3vs7cdfvjd4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3YiKTvNzmB9qGVAvVGmQHA30qCPixXBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773027938100-pc36t0b2h20efbj9auft3vs7cdfvjd4m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
