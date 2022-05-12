@@ -20,18 +20,18 @@ class _SplashScreenState extends State<SplashScreen> {
     const OnBoardModel(
       title: "Welcome to TYTO",
       description: "Made for dynamic learners by dynamic developers",
-      imgUrl: "assets/images/weight.png",
+      imgUrl: "assets/banners/welcome_tyto.png",
     ),
     const OnBoardModel(
-      title: "Virtual Classes made easier",
+      title: "Virtual classes made easier",
       description:
       "No more complex process to join your virtual class and take virtual exams.",
-      imgUrl: 'assets/images/graph.png',
+      imgUrl: 'assets/banners/virtual_class.png',
     ),
     const OnBoardModel(
-      title: "Let's get started!",
+      title: "Let's get started",
       description: "Tap the DONE Button below to get started.",
-      imgUrl: 'assets/images/phone.png',
+      imgUrl: 'assets/banners/lets_start.png',
     ),
   ];
 
@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
   static void checkFirstTimeUseStatus () async {
     final prefs = await SharedPreferences.getInstance();
     if(prefs.getBool("isFirstTime") == false){
-      prefs.getString('userEmail') == null ? redirectToLoginPage():Get.toNamed(Dashboard.routeName);
+      prefs.getString('userEmail') == null || prefs.getString('userEmail').toString() == ''? redirectToLoginPage():Get.toNamed(Dashboard.routeName);
     }
     prefs.setBool("isFirstTime", true);
   }
@@ -74,7 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
         pageController: _pageController,
         // Either Provide onSkip Callback or skipButton Widget to handle skip state
         onSkip: () {
-          print('skipped');
+          redirectToLoginPage();
         },
         // Either Provide onDone Callback or nextButton Widget to handle done state
         onDone: () {

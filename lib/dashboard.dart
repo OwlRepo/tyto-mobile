@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tyto/classroom.dart';
+import 'package:tyto/login.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -188,6 +189,7 @@ class _DashboardState extends State<Dashboard> {
                           children: [
                             TextFormField(
                               controller:_roomIDController,
+                              autofocus: true,
                               decoration: InputDecoration(labelText: 'Room ID'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -268,11 +270,18 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _appSettings() {
     return GestureDetector(
+      onTap: ()async{
+        final _pref = await SharedPreferences.getInstance();
+        _pref.setString('userEmail', '');
+        _pref.setString('userName', '');
+        _pref.setBool('isFirstTime', false);
+        Get.toNamed(Login.routeName);
+      },
       child: Column(
         children: [
           Container(
             child: const Icon(
-              Icons.settings,
+              Icons.exit_to_app_rounded,
               color: Colors.white,
             ),
             padding: const EdgeInsets.fromLTRB(
@@ -292,7 +301,7 @@ class _DashboardState extends State<Dashboard> {
             height: 10.0,
           ),
           Text(
-            'Settings',
+            'Sign Out',
             style: TextStyle(
               fontSize: MediaQuery.of(context).size.height * 0.015,
             ),
@@ -396,6 +405,8 @@ class _DashboardState extends State<Dashboard> {
                           margin: const EdgeInsets.only(
                             top: 15.0,
                             bottom: 15.0,
+                            left: 10.0,
+                            right: 10.0,
                           ),
                           padding: const EdgeInsets.only(
                             left: 10.0,

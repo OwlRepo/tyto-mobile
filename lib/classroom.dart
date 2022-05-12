@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jitsi_meet/jitsi_meet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tyto/dashboard.dart';
 
@@ -31,11 +32,14 @@ class _ClassroomState extends State<Classroom> {
   @override
   void initState() {
     super.initState();
-    JitsiMeet.addListener(JitsiMeetingListener(
+    JitsiMeet.addListener(
+      JitsiMeetingListener(
         onConferenceWillJoin: _onConferenceWillJoin,
         onConferenceJoined: _onConferenceJoined,
         onConferenceTerminated: _onConferenceTerminated,
-        onError: _onError));
+        onError: _onError,
+      ),
+    );
   }
 
   @override
@@ -61,23 +65,39 @@ class _ClassroomState extends State<Classroom> {
                     child: meetConfig(),
                   ),
                   Container(
-                      width: width * 0.60,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                            color: Colors.white54,
-                            child: SizedBox(
-                              width: width * 0.60 * 0.70,
-                              height: width * 0.60 * 0.70,
-                              child: JitsiMeetConferencing(
+                    width: width * 0.60,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        color: Colors.white54,
+                        child: SizedBox(
+                          width: width * 0.60 * 0.70,
+                          height: width * 0.60 * 0.70,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              JitsiMeetConferencing(
                                 extraJS: [
                                   // extraJs setup example
                                   '<script>function echo(){console.log("echo!!!")};</script>',
                                   '<script src="https://code.jquery.com/jquery-3.5.1.slim.js" integrity="sha256-DrT5NfxfbHvMHux31Lkhxg42LY6of8TaYyK50jnxRnM=" crossorigin="anonymous"></script>'
                                 ],
                               ),
-                            )),
-                      ))
+                              Container(
+                                height: MediaQuery.of(context).size.height,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                ),
+                                child: Text('test',
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               )
             : meetConfig(),
@@ -91,24 +111,24 @@ class _ClassroomState extends State<Classroom> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 14.0,
           ),
-          Text(
+          const Text(
             'Default Settings',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
             ),
           ),
-          Text(
-            'Configure the settings below to set the default settings when you enter the call.',
+          const Text(
+            'Configure the default settings before enter the call.',
             style: TextStyle(
               fontSize: 11.0,
               color: Colors.black45,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 28.0,
           ),
           CheckboxListTile(
@@ -117,7 +137,7 @@ class _ClassroomState extends State<Classroom> {
             onChanged: _onAudioMutedChanged,
             activeColor: Colors.cyan,
           ),
-          SizedBox(
+          const SizedBox(
             height: 14.0,
           ),
           CheckboxListTile(
@@ -126,7 +146,7 @@ class _ClassroomState extends State<Classroom> {
             onChanged: _onVideoMutedChanged,
             activeColor: Colors.cyan,
           ),
-          Divider(
+          const Divider(
             height: 48.0,
             thickness: 2.0,
           ),
@@ -137,24 +157,18 @@ class _ClassroomState extends State<Classroom> {
               onPressed: () {
                 _joinMeeting();
               },
-              child: Text(
+              child: const Text(
                 "Join Meeting",
                 style: TextStyle(color: Colors.white),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 48.0,
           ),
         ],
       ),
     );
-  }
-
-  _onAudioOnlyChanged(bool? value) {
-    setState(() {
-      isAudioOnly = value;
-    });
   }
 
   _onAudioMutedChanged(bool? value) {
@@ -190,13 +204,14 @@ class _ClassroomState extends State<Classroom> {
       if (Platform.isAndroid) {
         // Disable ConnectionService usage on Android to avoid issues (see README)
         featureFlags[FeatureFlagEnum.CALL_INTEGRATION_ENABLED] = false;
+        featureFlags[FeatureFlagEnum.PIP_ENABLED] = false;
       } else if (Platform.isIOS) {
         // Disable PIP on iOS as it looks weird
         featureFlags[FeatureFlagEnum.PIP_ENABLED] = false;
       }
     }
     // Define meetings options here
-    var options = JitsiMeetingOptions(room: roomText.text)
+    var options = JitsiMeetingOptions(room: _prefs.getString('room_id').toString())
       ..serverURL = serverUrl
       ..subject = _prefs.getString('subject_name') == ''
           ? 'HOST\'S ROOM'
@@ -223,11 +238,45 @@ class _ClassroomState extends State<Classroom> {
           onConferenceWillJoin: (message) {
             debugPrint("${options.room} will join with message: $message");
           },
-          onConferenceJoined: (message) {
+          onConferenceJoined: (message) async  {
             debugPrint("${options.room} joined with message: $message");
+
+            showMaterialModalBottomSheet(
+                context: context,
+                expand: true,
+                enableDrag: false,
+                isDismissible: false,
+                builder: (context) {
+                  return SingleChildScrollView(
+                    child: WillPopScope(
+                      onWillPop: () async {
+                        return false;
+                      },
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 50.0,),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              'Exam Name',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                });
           },
-          onConferenceTerminated: (message) {
+          onConferenceTerminated: (message) async {
             debugPrint("${options.room} terminated with message: $message");
+            final _prefs = await SharedPreferences.getInstance();
+            _prefs
+                .setString('subject_name', '')
+                .then((value) => Get.toNamed(Dashboard.routeName));
           },
           genericListeners: [
             JitsiGenericListener(
@@ -249,9 +298,6 @@ class _ClassroomState extends State<Classroom> {
 
   void _onConferenceTerminated(message) async {
     debugPrint("_onConferenceTerminated broadcasted with message: $message");
-    Get.toNamed(Dashboard.routeName);
-    final _prefs = await SharedPreferences.getInstance();
-    _prefs.setString('subject_name', '');
   }
 
   _onError(error) {
