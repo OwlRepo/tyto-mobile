@@ -28,7 +28,7 @@ class _DashboardState extends State<Dashboard> {
   Widget _newMeeting() {
     return GestureDetector(
       onTap: () {
-        String room_id = getRandomString(20);
+        String room_id = getRandomString(100);
         final _newMeetingFormKey = GlobalKey<FormState>();
         final _roomNameController = TextEditingController();
         showMaterialModalBottomSheet(

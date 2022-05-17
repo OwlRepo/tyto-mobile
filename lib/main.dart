@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tyto/classroom.dart';
@@ -34,6 +35,7 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
       initialRoute: initialRoute,
       debugShowCheckedModeBanner: false,
+      builder: EasyLoading.init(),
       theme: ThemeData(
         primaryColor: Colors.red,
         colorScheme: ColorScheme.fromSwatch(

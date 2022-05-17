@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +16,8 @@ class _LoginState extends State<Login> {
   final _loginFormKey = GlobalKey<FormState>();
   final _emailController = TextEditingController(),
       _passwordController = TextEditingController();
+
+
   static Future<bool> _validateEmail(String email) async {
     final emailRef = FirebaseFirestore.instance.collection('accounts_student');
     final emailDoc = await emailRef.doc(email).get();
@@ -22,8 +25,10 @@ class _LoginState extends State<Login> {
   }
 
   static Future<bool> _validatePassword(String email, String password) async {
+    final prefs = await SharedPreferences.getInstance();
     final emailRef = FirebaseFirestore.instance.collection('accounts_student');
     final emailDoc = await emailRef.doc(email).get();
+    prefs.setString('schedule_id', emailDoc.data()?['schedule_id']);
     return emailDoc.data()?['password'] == password;
   }
 
@@ -38,6 +43,7 @@ class _LoginState extends State<Login> {
   }
 
   Widget _loginForm() {
+    var isSignInButtonDisabled = false;
     return Form(
       key: _loginFormKey,
       onWillPop: () async {
@@ -47,6 +53,7 @@ class _LoginState extends State<Login> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
+            autofocus: true,
             controller: _emailController,
             decoration: InputDecoration(labelText: 'Student Email'),
             validator: (value) {
@@ -78,6 +85,7 @@ class _LoginState extends State<Login> {
           ),
           ElevatedButton(
             onPressed: () async {
+              EasyLoading.show(status: 'Loading');
               // Validate returns true if the form is valid, or false otherwise.
               if (_loginFormKey.currentState!.validate() &&
                   await _validateLogin(
@@ -85,15 +93,16 @@ class _LoginState extends State<Login> {
                 // If the form is valid, display a snackbar. In the real world,
                 // you'd often call a server or save the information in a database.
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Sign In')),
+                  const SnackBar(content: Text('Loading...')),
                 );
                 _cacheEmail(_emailController.text);
                 Get.toNamed('/dashboard');
+                EasyLoading.dismiss();
+                EasyLoading.showSuccess('Sign in successful.');
               }
               else{
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Account does not exist in our records.')),
-                );
+                EasyLoading.dismiss();
+                EasyLoading.showError('Account does not exist in our records.',dismissOnTap: true,);
               }
             },
             child: const Text(
@@ -153,6 +162,12 @@ class _LoginState extends State<Login> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override

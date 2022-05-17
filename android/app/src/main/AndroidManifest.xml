@@ -3,10 +3,10 @@
     package="com.example.tyto">
    <application
         tools:replace="android:label"
-        android:label="tyto"
+        android:label="TYTO Mobile"
         android:name="${applicationName}"
         android:exported="true"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"
