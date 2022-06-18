@@ -473,8 +473,10 @@ class _ClassroomState extends State<Classroom> {
       }
     }
     // Define meetings options here
+    var roomName = "${_prefs.getString('room_id').toString()}${_prefs.getString('subject_name').toString()}";
+
     var options =
-        JitsiMeetingOptions(room: _prefs.getString('room_id').toString())
+        JitsiMeetingOptions(room: roomName)
           ..serverURL = serverUrl
           // ..subject = _prefs.getString('subject_name') == ''
           //     ? 'HOST\'S ROOM'
@@ -486,7 +488,7 @@ class _ClassroomState extends State<Classroom> {
           ..videoMuted = isVideoMuted
           ..featureFlags.addAll(featureFlags)
           ..webOptions = {
-            "roomName": _prefs.getString('room_id'),
+            "roomName": roomName,
             "width": "100%",
             "height": "100%",
             "enableWelcomePage": false,
