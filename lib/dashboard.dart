@@ -19,6 +19,8 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   var _scheduleList = [];
 
+  var selectedDay = 0;
+
   var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
 
@@ -37,7 +39,12 @@ class _DashboardState extends State<Dashboard> {
             builder: (context) {
               return SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 50.0,),
+                  padding: EdgeInsets.fromLTRB(
+                    20.0,
+                    50.0,
+                    20.0,
+                    50.0,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -61,7 +68,8 @@ class _DashboardState extends State<Dashboard> {
                             TextFormField(
                               controller: _roomNameController,
                               autofocus: true,
-                              decoration: InputDecoration(labelText: 'Room Name'),
+                              decoration:
+                                  InputDecoration(labelText: 'Room Name'),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'This field is required.';
@@ -71,15 +79,15 @@ class _DashboardState extends State<Dashboard> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.blue
-                              ),
+                                  primary: Colors.blue),
                               onPressed: () async {
                                 // Validate returns true if the form is valid, or false otherwise.
-                                if (_newMeetingFormKey.currentState!.validate()) {
+                                if (_newMeetingFormKey.currentState!
+                                    .validate()) {
                                   // If the form is valid, display a snackbar. In the real world,
                                   // you'd often call a server or save the information in a database
-                                Clipboard.setData(ClipboardData(text: room_id));
-
+                                  Clipboard.setData(
+                                      ClipboardData(text: room_id));
                                 }
                               },
                               child: const Text(
@@ -92,21 +100,26 @@ class _DashboardState extends State<Dashboard> {
                             ElevatedButton(
                               onPressed: () async {
                                 // Validate returns true if the form is valid, or false otherwise.
-                                final _prefs = await SharedPreferences.getInstance();
+                                final _prefs =
+                                    await SharedPreferences.getInstance();
                                 _prefs.setString('room_id', room_id);
-                                _prefs.setString('subject_name', _roomNameController.text);
-                                if (_newMeetingFormKey.currentState!.validate()) {
+                                _prefs.setString(
+                                    'subject_name', _roomNameController.text);
+                                if (_newMeetingFormKey.currentState!
+                                    .validate()) {
                                   // If the form is valid, display a snackbar. In the real world,
                                   // you'd often call a server or save the information in a database.
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Creating Room')),
+                                    const SnackBar(
+                                        content: Text('Creating Room')),
                                   );
 
                                   Get.toNamed(Classroom.routeName);
-                                }
-                                else{
+                                } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Account does not exist in our records.')),
+                                    const SnackBar(
+                                        content: Text(
+                                            'Account does not exist in our records.')),
                                   );
                                 }
                               },
@@ -162,7 +175,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _joinMeeting() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         final _newMeetingFormKey = GlobalKey<FormState>();
         final _roomIDController = TextEditingController();
         showMaterialModalBottomSheet(
@@ -171,7 +184,12 @@ class _DashboardState extends State<Dashboard> {
             builder: (context) {
               return SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 50.0,),
+                  padding: EdgeInsets.fromLTRB(
+                    20.0,
+                    50.0,
+                    20.0,
+                    50.0,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -188,7 +206,7 @@ class _DashboardState extends State<Dashboard> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             TextFormField(
-                              controller:_roomIDController,
+                              controller: _roomIDController,
                               autofocus: true,
                               decoration: InputDecoration(labelText: 'Room ID'),
                               validator: (value) {
@@ -201,20 +219,25 @@ class _DashboardState extends State<Dashboard> {
                             ElevatedButton(
                               onPressed: () async {
                                 // Validate returns true if the form is valid, or false otherwise.
-                                final _prefs = await SharedPreferences.getInstance();
-                                _prefs.setString('room_id', _roomIDController.text);
-                                if (_newMeetingFormKey.currentState!.validate()) {
+                                final _prefs =
+                                    await SharedPreferences.getInstance();
+                                _prefs.setString(
+                                    'room_id', _roomIDController.text);
+                                if (_newMeetingFormKey.currentState!
+                                    .validate()) {
                                   // If the form is valid, display a snackbar. In the real world,
                                   // you'd often call a server or save the information in a database.
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Joining Room')),
+                                    const SnackBar(
+                                        content: Text('Joining Room')),
                                   );
 
                                   Get.toNamed(Classroom.routeName);
-                                }
-                                else{
+                                } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Account does not exist in our records.')),
+                                    const SnackBar(
+                                        content: Text(
+                                            'Account does not exist in our records.')),
                                   );
                                 }
                               },
@@ -270,7 +293,7 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _appSettings() {
     return GestureDetector(
-      onTap: ()async{
+      onTap: () async {
         final _pref = await SharedPreferences.getInstance();
         _pref.setString('userEmail', '');
         _pref.setString('userName', '');
@@ -340,9 +363,12 @@ class _DashboardState extends State<Dashboard> {
 
     _prefs.setString('userName', _accountData?['fullname']);
 
-    final _scheduleRef = FirebaseFirestore.instance.collection('schedules');
-    final _scheduleDoc =
-        await _scheduleRef.doc(_accountData?['schedule_id']).get();
+    final _scheduleRef = FirebaseFirestore.instance.collection('sections');
+    final _scheduleDoc = await _scheduleRef
+        .doc(_accountData?['schedule_id'])
+        .collection(_accountData?['section'])
+        .doc(_accountData?['section'])
+        .get();
     final _scheduleData = _scheduleDoc.data()?['subjects'];
 
     setState(() {
@@ -385,13 +411,161 @@ class _DashboardState extends State<Dashboard> {
               fontSize: 11.0,
             ),
           ),
+          Divider(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RawMaterialButton(
+                      onPressed: () {
+                        _fetchSchedule();
+                        setState(() {
+                          selectedDay = 0;
+                        });
+                      },
+                      elevation: 2.0,
+                      fillColor: selectedDay == 0 ? Colors.cyan : Colors.white,
+                      child: Text(
+                        'MO',
+                        style: TextStyle(
+                          color: selectedDay == 0 ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      padding: EdgeInsets.all(15.0),
+                      shape: CircleBorder(),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    const Text('Monday')
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RawMaterialButton(
+                      onPressed: () {
+                        _fetchSchedule();
+                        setState(() {
+                          selectedDay = 1;
+                        });
+                      },
+                      elevation: 2.0,
+                      fillColor: selectedDay == 1 ? Colors.cyan : Colors.white,
+                      child: Text(
+                        'TU',
+                        style: TextStyle(
+                          color: selectedDay == 1 ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      padding: EdgeInsets.all(15.0),
+                      shape: CircleBorder(),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    const Text('Tuesday')
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RawMaterialButton(
+                      onPressed: () {
+                        _fetchSchedule();
+                        setState(() {
+                          selectedDay = 2;
+                        });
+                      },
+                      elevation: 2.0,
+                      fillColor: selectedDay == 2 ? Colors.cyan : Colors.white,
+                      child: Text(
+                        'WE',
+                        style: TextStyle(
+                          color: selectedDay == 2 ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      padding: EdgeInsets.all(15.0),
+                      shape: CircleBorder(),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    const Text('Wednesday')
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RawMaterialButton(
+                      onPressed: () {
+                        _fetchSchedule();
+                        setState(() {
+                          selectedDay = 3;
+                        });
+                      },
+                      elevation: 2.0,
+                      fillColor: selectedDay == 3 ? Colors.cyan : Colors.white,
+                      child: Text(
+                        'TH',
+                        style: TextStyle(
+                          color: selectedDay == 3 ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      padding: EdgeInsets.all(15.0),
+                      shape: CircleBorder(),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    const Text('Thursday')
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RawMaterialButton(
+                      onPressed: () {
+                        _fetchSchedule();
+                        setState(() {
+                          selectedDay = 4;
+                        });
+                      },
+                      elevation: 2.0,
+                      fillColor: selectedDay == 4 ? Colors.cyan : Colors.white,
+                      child: Text(
+                        'FR',
+                        style: TextStyle(
+                          color: selectedDay == 4 ? Colors.white : Colors.black,
+                        ),
+                      ),
+                      padding: EdgeInsets.all(15.0),
+                      shape: CircleBorder(),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    const Text('Friday')
+                  ],
+                ),
+              ],
+            ),
+          ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.575,
-            margin: EdgeInsets.only(
+            height: MediaQuery.of(context).size.height * 0.525,
+            margin: const EdgeInsets.only(
               top: 10.0,
             ),
             child: _scheduleList.isEmpty
-                ? Text('Loading...')
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: const [Text('Loading...')],
+                  )
                 : ListView.builder(
                     shrinkWrap: true,
                     itemCount: _scheduleList.length,
@@ -494,9 +668,9 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: Colors.cyan,
       body: SafeArea(
         child: WillPopScope(
-            onWillPop: () async {
-              return false;
-            },
+          onWillPop: () async {
+            return false;
+          },
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
@@ -544,5 +718,3 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 }
-
-

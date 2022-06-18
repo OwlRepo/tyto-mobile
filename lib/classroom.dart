@@ -476,9 +476,9 @@ class _ClassroomState extends State<Classroom> {
     var options =
         JitsiMeetingOptions(room: _prefs.getString('room_id').toString())
           ..serverURL = serverUrl
-          ..subject = _prefs.getString('subject_name') == ''
-              ? 'HOST\'S ROOM'
-              : _prefs.getString('subject_name')
+          // ..subject = _prefs.getString('subject_name') == ''
+          //     ? 'HOST\'S ROOM'
+          //     : _prefs.getString('subject_name')
           ..userDisplayName = _prefs.getString('userName')
           ..userEmail = _prefs.getString('userEmail')
           ..audioOnly = isAudioOnly
@@ -626,6 +626,7 @@ class _ExamRoomContentsState extends State<ExamRoomContents> {
           "schedule_id": prefs.getString('schedule_id'),
           "student_name": prefs.getString('userName'),
           "student_email": prefs.getString('userEmail'),
+          "score":0,
           "exam_submitted": false,
           "exam_results": FieldValue.arrayUnion([]),
         }).onError((error, stackTrace) => null);
@@ -748,6 +749,7 @@ class _ExamRoomContentsState extends State<ExamRoomContents> {
             "schedule_id": prefs.getString('schedule_id'),
             "student_name": prefs.getString('userName'),
             "exam_submitted": true,
+            "score":correctAnswers,
             "exam_results": FieldValue.arrayUnion([
               {
                 "answer": answer.answer,
@@ -768,6 +770,7 @@ class _ExamRoomContentsState extends State<ExamRoomContents> {
               "schedule_id": prefs.getString('schedule_id'),
               "student_name": prefs.getString('userName'),
               "exam_submitted": true,
+              "score":correctAnswers,
               "exam_results": FieldValue.arrayUnion([
                 {
                   "answer": answer.answer,
@@ -1111,6 +1114,7 @@ class _PopupQuizContentsState extends State<PopupQuizContents> {
           "student_name": prefs.getString('userName'),
           "student_email": prefs.getString('userEmail'),
           "quiz_submitted": false,
+          "score":0,
           "quiz_results": FieldValue.arrayUnion([]),
         }).onError((error, stackTrace) => null);
         EasyLoading.dismiss();
@@ -1233,6 +1237,7 @@ class _PopupQuizContentsState extends State<PopupQuizContents> {
             "schedule_id": prefs.getString('schedule_id'),
             "student_name": prefs.getString('userName'),
             "quiz_submitted": true,
+            "score":correctAnswers,
             "quiz_results": FieldValue.arrayUnion([
               {
                 "answer": answer.answer,
@@ -1253,6 +1258,7 @@ class _PopupQuizContentsState extends State<PopupQuizContents> {
               "schedule_id": prefs.getString('schedule_id'),
               "student_name": prefs.getString('userName'),
               "quiz_submitted": true,
+              "score":correctAnswers,
               "quiz_results": FieldValue.arrayUnion([
                 {
                   "answer": answer.answer,
@@ -1589,6 +1595,7 @@ class _RecitationTimeContentsState extends State<RecitationTimeContents> {
         "student_name": prefs.getString('userName'),
         "student_email": prefs.getString('userEmail'),
         "recitation_submitted": false,
+        "score":0,
         "recitation_results": FieldValue.arrayUnion([]),
       }).onError((error, stackTrace) => null);
       EasyLoading.dismiss();
@@ -1702,6 +1709,7 @@ class _RecitationTimeContentsState extends State<RecitationTimeContents> {
             "schedule_id": prefs.getString('schedule_id'),
             "student_name": prefs.getString('userName'),
             "recitation_submitted": true,
+            "score":correctAnswers,
             "recitation_results": FieldValue.arrayUnion([
               {
                 "answer": answer.answer,
@@ -1722,6 +1730,7 @@ class _RecitationTimeContentsState extends State<RecitationTimeContents> {
               "schedule_id": prefs.getString('schedule_id'),
               "student_name": prefs.getString('userName'),
               "recitation_submitted": true,
+              "score":correctAnswers,
               "recitation_results": FieldValue.arrayUnion([
                 {
                   "answer": answer.answer,
